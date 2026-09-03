@@ -1,4 +1,4 @@
-# Portal de Prácticas TP — Sistema de Diseño (Design System)
+# Portal de Prácticas — Sistema de Diseño (Design System)
 
 Documento fuente única del estilo del frontend. Toda la UI se construye **solo** con las
 clases y tokens definidos aquí. No inventar colores, espaciados ni tipografías nuevas:
@@ -17,17 +17,23 @@ así que la pieza central de la interfaz es la **vía de estado** (state rail): 
 horizontal que muestra en qué punto del proceso está cada práctica. No es decoración: los
 estados son una secuencia real que el usuario necesita leer de un vistazo.
 
-**Audiencia:** egresados de colegio técnico (estudiantes) que registran su práctica, y
-profesores que supervisan. Lenguaje de "gestión", sin jerga de sistema.
+**Audiencia:** alumnos egresados que registran su práctica profesional, y profesores que
+supervisan. Lenguaje de "gestión", sin jerga de sistema.
+
+> **Marca:** el producto se llama "Portal de Prácticas". No usar "TP" ni "colegio técnico"
+> en la UI ni en los textos visibles.
 
 **Paleta — decisión de identidad:** base *ink* (pizarra técnica, no azul corporativo) con
 un acento *ámbar* de señalización (la práctica en curso es una "luz ámbar") y un *teal*
 institucional para las acciones primarias. El verde solo significa "EVALUADA/aprobada",
 el rojo solo "error". Evita el azul por defecto de los dashboards y el verde ácido genérico.
 
-**Firma visual (signature):** el **state rail** ámbar/teal/verde + el fondo de
-**cuadrícula de plano técnico** (blueprint grid) en las pantallas de autenticación. Esos
-dos elementos son los únicos momentos "de carácter"; el resto se mantiene disciplinado.
+**Firma visual (signature):** en autenticación, la **ficha de expediente**: panel ink con
+cuadrícula técnica, título display con la palabra clave en **sello ámbar** rotado
+(ej. *Portal de [Prácticas]*), código `Exp. 0001/26` en mono y el **state rail** del
+producto con la luz ámbar de "ACTIVA" encendida (`signal-glow`). Dentro de la app, el
+**state rail** ámbar/teal/verde es la pieza central. Solo estos momentos llevan carácter;
+el resto se mantiene disciplinado.
 
 **Tipografía:** *Space Grotesk* (display, técnica con carácter) para títulos y marca;
 *Inter* para texto; *JetBrains Mono* para datos (IDs, emails, fechas, cifras). La mono está
@@ -89,6 +95,25 @@ de la sección 3). Los valores hex son la fuente de verdad; no re-declararlos en
 
   /* Curvas de motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+```
+
+### Utilidades propias (`index.css`, fuera de `@theme`)
+
+```css
+/* Esquina de "ficha": recorta la esquina superior derecha del elemento. */
+@utility corner-notch {
+  clip-path: polygon(0 0, calc(100% - 1.25rem) 0, 100% 1.25rem, 100% 100%, 0 100%);
+}
+
+/* Cinta de señalización (ámbar → teal), borde superior de marca. */
+@utility signal-strip {
+  background: linear-gradient(90deg, var(--color-amber), var(--color-brand));
+}
+
+/* Luz de señal encendida (estado ACTIVA) sobre fondo ink. */
+@utility signal-glow {
+  box-shadow: 0 0 0 4px rgb(224 138 30 / 0.22), 0 0 18px rgb(224 138 30 / 0.45);
 }
 ```
 
@@ -249,23 +274,52 @@ Mensaje siempre explica qué pasó y qué hacer (ver sección 8).
 Botón en carga: `disabled` + texto "Guardando…". Listado en carga: fila fantasma
 `animate-pulse rounded bg-paper` (una sola línea gris).
 
+### 5.12 BrandPanel (autenticación)
+
+Panel de marca tipo "ficha de expediente" (ver 6.1). Fichero: `components/ui/BrandPanel.tsx`.
+Estructura y clases:
+- Contenedor: `relative hidden overflow-hidden bg-ink lg:flex lg:flex-col lg:justify-between lg:p-10`
+- Fondo: `absolute inset-0 bg-blueprint`; cinta: `absolute inset-x-0 top-0 h-1 signal-strip`
+- Eyebrow: `font-mono text-xs uppercase tracking-[0.22em] text-white/60`
+- Código: `font-mono text-[11px] uppercase tracking-[0.18em] text-amber` ("Exp. 0001/26")
+- Título: `font-display text-4xl font-semibold leading-[1.05] text-white xl:text-5xl`
+- Sello (palabra clave): `mt-2 inline-block -rotate-1 rounded-sm bg-amber px-3 pb-1 text-ink`
+- Descripción: `max-w-md text-white/70`
+- Rail onDark: etiquetas `font-mono text-[10px] uppercase tracking-[0.14em] text-white/60`;
+  punto ACTIVA `h-2 w-2 rounded-full bg-amber signal-glow`, pendientes
+  `h-2 w-2 rounded-full border border-white/25`; segmentos `h-px w-8 bg-amber/50` (completado)
+  o `bg-white/15` (pendiente)
+- Footer: `font-mono text-xs uppercase tracking-wide text-white/50`
+
+Props: `eyebrow`, `code`, `titleA`, `mark` (palabra del sello), `description`, `footer`.
+Mismo panel (mismo `titleA`/`mark`) en Login y Register; cambia solo la descripción.
+
+### 5.13 BrandMarks (crucetas de registro)
+
+Enmarca la ficha del formulario de auth con 4 cruces de imprenta. Fichero:
+`components/ui/BrandMarks.tsx`. Cada cruz: SVG `pointer-events-none absolute h-4 w-4
+text-faint` con trazo `+`, posiciones `-left-2 -top-2`, `-right-2 -top-2`,
+`-bottom-2 -left-2`, `-bottom-2 -right-2`. Decorativas (`aria-hidden="true"`).
+
 ---
 
 ## 6. Pantallas
 
-### 6.1 Autenticación (Login / Registro) — split con blueprint grid
+### 6.1 Autenticación (Login / Registro) — ficha de expediente
 
 - **Contenedor**: `grid min-h-screen lg:grid-cols-2`
-- **Panel de marca (izq., solo ≥1024px)**: `relative hidden overflow-hidden bg-ink lg:flex lg:flex-col lg:justify-between lg:p-10`
-  - Fondo de cuadrícula técnica (firma): capa `absolute inset-0` con
-    `background-image: linear-gradient(var(--color-line)/12% 1px, transparent 1px), linear-gradient(90deg, var(--color-line)/12% 1px, transparent 1px); background-size: 40px 40px;`
-  - Título: `font-display text-3xl font-semibold text-white`
-  - Subtítulo: `text-white/70`
-  - Pie (info institucional): `font-mono text-xs uppercase tracking-wide text-white/50`
-- **Panel de formulario (der.)**: `flex items-center justify-center bg-paper p-6 lg:p-12`
-  - Tarjeta del formulario: `w-full max-w-md space-y-4`
-  - Logo/título móvil: `font-display text-xl font-semibold` (visible en <1024px).
-  - Error global (5.10), campos (5.2), botón primario a ancho completo: `w-full`.
+- **Panel de marca** (izq., solo ≥1024px): componente `BrandPanel` (5.12). Fondo ink +
+  cuadrícula (`bg-blueprint`), cinta `signal-strip` en el borde superior, título
+  "Portal de **[Prácticas]**" con sello ámbar, `Exp. 0001/26` y rail de estados onDark
+  con luz ACTIVA. Copy: eyebrow "Alumnos egresados"; login footer "Práctica profesional";
+  registro footer "Registro de egresado".
+- **Panel de formulario** (der.): `flex items-center justify-center bg-paper p-6 lg:p-12`
+  - Wrapper de la ficha: `relative w-full max-w-md` con `BrandMarks` (5.13).
+  - Tarjeta: `corner-notch relative space-y-5 rounded-card border border-line bg-surface p-8 shadow-pop`
+  - Eyebrow: `font-mono text-xs uppercase tracking-[0.2em] text-muted` ("ACCESO"/"REGISTRO")
+  - Título: `font-display text-2xl font-semibold tracking-tight`; subtítulo `text-sm text-muted`
+  - Error (5.10), campos (5.2), botón primario `w-full`
+  - Móvil (<1024px, sin panel): `h1 font-display text-xl font-semibold` "Portal de Prácticas"
 
 ### 6.2 Dashboard (shell de app, ambos roles)
 

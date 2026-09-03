@@ -89,3 +89,24 @@
     transition: none !important;
   }
 }
+
+/* Esquina de "ficha": recorta la esquina superior derecha de un elemento. */
+@utility corner-notch {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 1.25rem) 0,
+    100% 1.25rem,
+    100% 100%,
+    0 100%
+  );
+}
+
+/* Cinta de señalización (ámbar → teal), usada como borde superior de marca. */
+@utility signal-strip {
+  background: linear-gradient(90deg, var(--color-amber), var(--color-brand));
+}
+
+/* Luz de señal encendida (estado ACTIVA) sobre fondo ink. */
+@utility signal-glow {
+  box-shadow: 0 0 0 4px rgb(224 138 30 / 0.22), 0 0 18px rgb(224 138 30 / 0.45);
+}

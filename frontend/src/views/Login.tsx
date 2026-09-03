@@ -3,6 +3,8 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { Alert } from '../components/ui/Alert';
+import { BrandMarks } from '../components/ui/BrandMarks';
+import { BrandPanel } from '../components/ui/BrandPanel';
 import { Button } from '../components/ui/Button';
 import { Field, Input } from '../components/ui/Field';
 
@@ -30,61 +32,60 @@ export function Login() {
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="relative hidden overflow-hidden bg-ink lg:flex lg:flex-col lg:justify-between lg:p-10">
-        <div className="absolute inset-0 bg-blueprint" aria-hidden="true" />
-        <div className="relative">
-          <p className="font-display text-3xl font-semibold text-white">Portal de Prácticas TP</p>
-        </div>
-        <div className="relative">
-          <p className="max-w-md text-white/70">
-            Registra, da seguimiento y evalúa las prácticas profesionales de los egresados del
-            colegio técnico.
-          </p>
-          <p className="mt-6 font-mono text-xs uppercase tracking-wide text-white/50">
-            Colegio técnico · Práctica profesional
-          </p>
-        </div>
-      </div>
+      <BrandPanel
+        eyebrow="Alumnos egresados"
+        code="Exp. 0001/26"
+        titleA="Portal de"
+        mark="Prácticas"
+        description="Registra, da seguimiento y evalúa las prácticas profesionales de los alumnos egresados."
+        footer="Práctica profesional"
+      />
 
       <div className="flex items-center justify-center bg-paper p-6 lg:p-12">
-        <div className="w-full max-w-md space-y-4">
-          <h1 className="font-display text-xl font-semibold lg:hidden">Portal de Prácticas TP</h1>
-          <div>
-            <h2 className="font-display text-2xl font-semibold tracking-tight">Iniciar sesión</h2>
-            <p className="text-sm text-muted">Accede con tu cuenta para ver tus prácticas.</p>
+        <div className="relative w-full max-w-md">
+          <BrandMarks />
+          <div className="corner-notch relative space-y-5 rounded-card border border-line bg-surface p-8 shadow-pop">
+            <h1 className="font-display text-xl font-semibold lg:hidden">Portal de Prácticas</h1>
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">Acceso</p>
+              <h2 className="mt-1 font-display text-2xl font-semibold tracking-tight">
+                Iniciar sesión
+              </h2>
+              <p className="mt-1 text-sm text-muted">Accede con tu cuenta para ver tus prácticas.</p>
+            </div>
+            {error ? <Alert variant="error">{error}</Alert> : null}
+            <form onSubmit={onSubmit} className="space-y-4">
+              <Field label="Email" htmlFor="email">
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  required
+                />
+              </Field>
+              <Field label="Contraseña" htmlFor="password">
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                />
+              </Field>
+              <Button type="submit" loading={loading} className="w-full">
+                Iniciar sesión
+              </Button>
+            </form>
+            <p className="text-sm text-muted">
+              ¿No tienes cuenta?{' '}
+              <Link to="/register" className="font-medium text-brand hover:text-brand-strong">
+                Regístrate
+              </Link>
+            </p>
           </div>
-          {error ? <Alert variant="error">{error}</Alert> : null}
-          <form onSubmit={onSubmit} className="space-y-4">
-            <Field label="Email" htmlFor="email">
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                required
-              />
-            </Field>
-            <Field label="Contraseña" htmlFor="password">
-              <Input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-              />
-            </Field>
-            <Button type="submit" loading={loading} className="w-full">
-              Iniciar sesión
-            </Button>
-          </form>
-          <p className="text-sm text-muted">
-            ¿No tienes cuenta?{' '}
-            <Link to="/register" className="font-medium text-brand hover:text-brand-strong">
-              Regístrate
-            </Link>
-          </p>
         </div>
       </div>
     </div>

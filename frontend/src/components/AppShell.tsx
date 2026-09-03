@@ -44,7 +44,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-paper">
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-line bg-surface px-4 py-6 lg:flex">
         <div className="mb-8 px-2">
-          <p className="font-display text-lg font-semibold">Prácticas TP</p>
+          <p className="font-display text-lg font-semibold">Portal de Prácticas</p>
           <p className="font-mono text-[10px] uppercase tracking-wide text-muted">Seguimiento</p>
         </div>
         <nav className="space-y-1">
@@ -54,7 +54,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="lg:pl-64">
         <header className="flex items-center justify-between border-b border-line bg-surface px-6 py-3">
-          <p className="font-display text-base font-semibold lg:hidden">Prácticas TP</p>
+          <p className="font-display text-base font-semibold lg:hidden">Portal de Prácticas</p>
           <div className="hidden items-center gap-2 lg:flex">
             <span className="text-sm font-medium text-ink">{user.name}</span>
             <span className="font-mono text-xs text-muted">{user.email}</span>
