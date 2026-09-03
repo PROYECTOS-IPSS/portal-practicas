@@ -23,7 +23,7 @@ const establishSession = async (req: Request, user: { id: string; role: string }
 export const authController = {
   // POST /api/auth/register — público. Registro + sesión iniciada (Dashboard directo).
   register: (async (req: Request, res: Response) => {
-    const input = req.body as RegisterInput;
+    const input = req.validated!.body as RegisterInput;
     const user = await authService.register(input);
     await establishSession(req, user);
     res.status(201).json(user);
@@ -31,7 +31,7 @@ export const authController = {
 
   // POST /api/auth/login — público.
   login: (async (req: Request, res: Response) => {
-    const input = req.body as LoginInput;
+    const input = req.validated!.body as LoginInput;
     const user = await authService.login(input);
     await establishSession(req, user);
     res.status(200).json(user);
