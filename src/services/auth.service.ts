@@ -53,4 +53,13 @@ export const authService = {
       major: user.major,
     };
   },
+
+  /** Datos del usuario autenticado para GET /session (404 si la cuenta no existe). */
+  async getSessionUser(userId: string) {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      throw new HttpError(404, 'Usuario no encontrado');
+    }
+    return user;
+  },
 };
