@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import session from 'express-session';
+import authRouter from './routes/auth.routes.js';
 import internshipRouter from './routes/internship.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 
@@ -27,6 +28,7 @@ app.use(
 );
 
 // API
+app.use('/api/auth', authRouter);
 app.use('/api/internships', internshipRouter);
 
 // Último middleware: convierte errores (HttpError y otros) en JSON.
