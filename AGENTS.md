@@ -5,12 +5,15 @@ Imprime "Entendido. He cargado las directrices del Portal de Prácticas TP y est
 # AGENTS.md — Portal de Prácticas TP
 
 ## Propósito
+
 Esta guía define cómo implementar el sistema de gestión de prácticas profesionales para el colegio técnico.
+
 - `docs/BRIEF.md` (o los requerimientos del usuario) definen **qué** debe hacer el producto.
 - `AGENTS.md` define **cómo** debe construirse.
-Si hay una contradicción, informar antes de implementar. No agregar alcance por iniciativa propia.
+  Si hay una contradicción, informar antes de implementar. No agregar alcance por iniciativa propia.
 
 ## Stack obligatorio
+
 - Backend: Node.js, Express.js y TypeScript.
 - Base de datos: PostgreSQL y Prisma ORM.
 - Frontend: React, TypeScript, TailwindCSS y Vite.
@@ -18,49 +21,59 @@ Si hay una contradicción, informar antes de implementar. No agregar alcance por
 - Seguridad: `bcryptjs` y `express-session`.
 - Desarrollo: Yarn, `tsx watch`, ESLint, Prettier y Vitest.
 - Docker Compose es opcional.
-Nodemon puede reemplazar `tsx watch`, pero no se deben usar ambos. No agregar dependencias innecesarias.
+  Nodemon puede reemplazar `tsx watch`, pero no se deben usar ambos. No agregar dependencias innecesarias.
 
 ## Linting
+
 - Backend: ESLint (config flat). Se corre en la raíz del proyecto.
 - Frontend: `oxlint` (linter oficial de los templates de Vite, implementado en Rust). Config en `frontend/.oxlintrc.json`; se corre con `yarn lint` dentro de `frontend/`.
 - No instalar ESLint en el frontend ni oxlint en el backend: cada capa conserva su linter actual.
 
 ## Arquitectura MVC
+
 React / vistas
-      ↓ HTTP / REST
+↓ HTTP / REST
 Routes + middlewares
-      ↓
+↓
 Controllers
-      ↓
+↓
 Services
-      ↓
+↓
 Models + Prisma
-      ↓
+↓
 PostgreSQL
 
 ### Frontend
+
 React contiene vistas, componentes y estado de interfaz. No decide de forma definitiva disponibilidad de recursos, permisos ni estado de los registros.
 Las vistas nuevas deben ser responsive, accesibles y construidas con TailwindCSS.
 
 ### Routes
+
 Define endpoints y conecta middlewares con controllers. No contiene lógica de negocio ni acceso a Prisma.
 
 ### Controllers
+
 Recibe la petición HTTP, usa datos validados por Zod, llama al service y devuelve JSON. No contiene consultas Prisma ni reglas complejas.
 
 ### Services
+
 Contiene la lógica de negocio: validación de propiedad de los registros, aplicación de reglas de roles (RBAC), creación, edición, y autenticación.
 
 ### Models
+
 Contiene todo acceso a Prisma y PostgreSQL. No conoce Express ni React.
 
 ### Schemas
+
 Contiene esquemas Zod para validar `body`, `params` y `query`.
 
 ### Middleware
+
 Contiene validación de esquemas, verificación de sesión, control de acceso por roles (RBAC) y manejo de errores.
 
 ## Estructura mínima
+
 prisma/
 ├── migrations/
 ├── schema.prisma
@@ -86,6 +99,7 @@ frontend/src/
 Crear archivos solo cuando una funcionalidad los necesite. Reutilizar patrones existentes.
 
 ## Reglas técnicas del MVP implementado
+
 - Todo el sistema requiere autenticación. No hay rutas públicas a excepción del Login/Registro.
 - Los roles disponibles son `STUDENT` y `TEACHER`.
 - El acceso al Dashboard requiere una sesión válida.
@@ -102,20 +116,21 @@ Crear archivos solo cuando una funcionalidad los necesite. Reutilizar patrones e
 - No implementar funciones fuera del brief.
 
 ### Modelo de Práctica (InternshipRecord)
+
 InternshipRecord
 ├── id
-├── studentId       → Relación con User (rol STUDENT, inmutable tras la creación)
-├── teacherId       → Relación con User (rol TEACHER, profesor supervisor)
-├── companyName     → Nombre de la empresa
-├── companyAddress  → Dirección de la empresa
-├── companyPhone    → Teléfono de la empresa
-├── bossName        → Nombre del jefe/supervisor directo
-├── bossContact     → Email o teléfono del jefe directo
-├── startDate       → Fecha de inicio
-├── endDate         → Fecha de término
-├── description     → Actividades a realizar
-├── status          → ACTIVA, FINALIZADA, EVALUADA
-└── deletedAt       → Soft delete (nullable)
+├── studentId → Relación con User (rol STUDENT, inmutable tras la creación)
+├── teacherId → Relación con User (rol TEACHER, profesor supervisor)
+├── companyName → Nombre de la empresa
+├── companyAddress → Dirección de la empresa
+├── companyPhone → Teléfono de la empresa
+├── bossName → Nombre del jefe/supervisor directo
+├── bossContact → Email o teléfono del jefe directo
+├── startDate → Fecha de inicio
+├── endDate → Fecha de término
+├── description → Actividades a realizar
+├── status → ACTIVA, FINALIZADA, EVALUADA
+└── deletedAt → Soft delete (nullable)
 
 - Validar con Zod todo `req.body`, `req.params` y `req.query`.
 - Nunca confiar en datos enviados por React.
@@ -126,7 +141,9 @@ InternshipRecord
 - Usar Prisma Client; SQL manual solo con justificación.
 
 ## Principios de calidad
+
 El código debe ser:
+
 - limpio y autoexplicativo;
 - ordenado y fácil de leer;
 - guiado por los principios SOLID;
@@ -137,17 +154,21 @@ El código debe ser:
 - Eliminar código muerto, imports sin usar y variables no referenciadas.
 
 ## Git y trabajo colaborativo
+
 - Usar ramas descriptivas según el cambio, por ejemplo `feat/auth`, `feat/crud-practicas`, `feat/dashboard-ui` o `fix/rbac-middleware`.
 - Mantener commits pequeños, atómicos y descriptivos.
 - Coordinar cambios en `prisma/schema.prisma` y ejecutar migraciones antes de testear.
 
 ## Protocolo de agentes
+
 Antes de editar:
+
 1. Leer `AGENTS.md` (este documento).
 2. Revisar código relacionado y patrones existentes.
 3. Localizar referencias afectadas.
 
 Al implementar:
+
 1. Mantener el flujo MVC estricto.
 2. Validar entradas en servidor con Zod ANTES de tocar la BD.
 3. Colocar reglas en services.
@@ -156,6 +177,7 @@ Al implementar:
 6. No dejar stubs, mocks, no-ops ni código muerto.
 
 ## Definition of Done
+
 - [ ] Entradas validadas con Zod.
 - [ ] Tipado TypeScript correcto y estricto.
 - [ ] Routes sin lógica de negocio ni Prisma.
@@ -167,7 +189,9 @@ Al implementar:
 - [ ] Typecheck, lint y pruebas relevantes pasan.
 
 ## Prohibiciones
+
 No:
+
 - romper MVC;
 - acceder a Prisma desde routes, controllers o React;
 - omitir validación Zod;

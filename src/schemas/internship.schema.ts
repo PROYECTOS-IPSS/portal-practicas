@@ -1,16 +1,16 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-export const internshipStatusSchema = z.enum(["ACTIVA", "FINALIZADA", "EVALUADA"]);
+export const internshipStatusSchema = z.enum(['ACTIVA', 'FINALIZADA', 'EVALUADA']);
 
 // Fechas en formato ISO date-only (YYYY-MM-DD); se admiten fechas pasadas.
 // La comparación lexicográfica es válida para este formato.
 const companyDataSchema = {
-  companyName: z.string().trim().min(1, "El nombre de la empresa es obligatorio").max(200),
-  companyAddress: z.string().trim().min(1, "La dirección es obligatoria").max(300),
-  companyPhone: z.string().trim().min(1, "El teléfono es obligatorio").max(50),
-  bossName: z.string().trim().min(1, "El nombre del jefe es obligatorio").max(200),
-  bossContact: z.string().trim().min(1, "El contacto del jefe es obligatorio").max(200),
-  description: z.string().trim().min(1, "La descripción es obligatoria").max(2000),
+  companyName: z.string().trim().min(1, 'El nombre de la empresa es obligatorio').max(200),
+  companyAddress: z.string().trim().min(1, 'La dirección es obligatoria').max(300),
+  companyPhone: z.string().trim().min(1, 'El teléfono es obligatorio').max(50),
+  bossName: z.string().trim().min(1, 'El nombre del jefe es obligatorio').max(200),
+  bossContact: z.string().trim().min(1, 'El contacto del jefe es obligatorio').max(200),
+  description: z.string().trim().min(1, 'La descripción es obligatoria').max(2000),
 };
 
 // POST /api/internships.
@@ -20,14 +20,14 @@ const companyDataSchema = {
 export const createInternshipSchema = z
   .object({
     ...companyDataSchema,
-    startDate: z.iso.date("startDate debe ser una fecha válida (YYYY-MM-DD)"),
-    endDate: z.iso.date("endDate debe ser una fecha válida (YYYY-MM-DD)"),
-    teacherId: z.string().min(1, "teacherId es obligatorio"),
+    startDate: z.iso.date('startDate debe ser una fecha válida (YYYY-MM-DD)'),
+    endDate: z.iso.date('endDate debe ser una fecha válida (YYYY-MM-DD)'),
+    teacherId: z.string().min(1, 'teacherId es obligatorio'),
     studentId: z.string().min(1).optional(),
   })
   .refine((data) => data.endDate >= data.startDate, {
-    message: "endDate debe ser mayor o igual a startDate",
-    path: ["endDate"],
+    message: 'endDate debe ser mayor o igual a startDate',
+    path: ['endDate'],
   });
 
 export type CreateInternshipInput = z.infer<typeof createInternshipSchema>;
@@ -51,12 +51,10 @@ export const updateInternshipSchema = z
   .strict()
   .refine(
     (data) =>
-      data.startDate === undefined ||
-      data.endDate === undefined ||
-      data.endDate >= data.startDate,
+      data.startDate === undefined || data.endDate === undefined || data.endDate >= data.startDate,
     {
-      message: "endDate debe ser mayor o igual a startDate",
-      path: ["endDate"],
+      message: 'endDate debe ser mayor o igual a startDate',
+      path: ['endDate'],
     },
   );
 
@@ -64,7 +62,7 @@ export type UpdateInternshipInput = z.infer<typeof updateInternshipSchema>;
 
 // Params de rutas con :id.
 export const idParamSchema = z.object({
-  id: z.string().min(1, "id es obligatorio"),
+  id: z.string().trim().min(1, 'id es obligatorio'),
 });
 
 export type IdParam = z.infer<typeof idParamSchema>;

@@ -1,6 +1,7 @@
 # Brief — Portal de Prácticas TP
 
 ## Objetivo
+
 Crear una aplicación web para gestionar el registro de prácticas profesionales de los estudiantes egresados de un colegio técnico, con autenticación y dos perfiles de acceso: estudiante y profesor.
 
 Este documento define únicamente el MVP (**qué**). `AGENTS.md` define **cómo** debe construirse. Si hay contradicción, informar antes de implementar.
@@ -8,6 +9,7 @@ Este documento define únicamente el MVP (**qué**). `AGENTS.md` define **cómo*
 ## Usuarios
 
 ### Estudiante
+
 Se registra, inicia sesión y puede:
 
 - crear un registro de práctica profesional;
@@ -16,6 +18,7 @@ Se registra, inicia sesión y puede:
 No puede editar ni eliminar registros. Tampoco puede ver prácticas de otros estudiantes (la API responde `404`, sin revelar si el registro existe).
 
 ### Profesor
+
 Inicia sesión y puede:
 
 - crear prácticas en nombre de cualquier estudiante;
@@ -29,6 +32,7 @@ Las cuentas de profesor se cargan mediante `prisma/seed.ts` (no existe registro 
 ## Flujo de registro de práctica
 
 ### Estudiante
+
 1. Se registra (rol `STUDENT`) o inicia sesión.
 2. Entra al Dashboard, donde ve "Mis prácticas" y un formulario para agregar.
 3. Completa datos de la empresa (nombre, dirección, teléfono), del jefe directo (nombre, contacto), el profesor supervisor (`teacherId`, de la lista de profesores) y fechas y descripción de las actividades.
@@ -38,6 +42,7 @@ Las cuentas de profesor se cargan mediante `prisma/seed.ts` (no existe registro 
 7. Crea el registro con estado `ACTIVA` y responde `201` con el registro creado.
 
 ### Profesor
+
 1. Inicia sesión con una cuenta precargada (seed).
 2. Ve el listado completo de prácticas y un formulario que incluye selector de estudiante y de profesor supervisor (por defecto, él mismo).
 3. Envía `POST /api/internships` con `studentId` y `teacherId` explícitos.
@@ -45,6 +50,7 @@ Las cuentas de profesor se cargan mediante `prisma/seed.ts` (no existe registro 
 5. Crea el registro y responde `201`.
 
 ## Reglas del sistema
+
 - Todo el sistema requiere sesión activa (`express-session`, cookie HTTP-only). Únicas rutas públicas: Login y Registro.
 - **Estudiante:** solo puede crear (`POST`) y leer (`GET`) sus propios registros. El frontend oculta botones de edición/eliminación para este rol.
 - **Profesor:** puede crear (en nombre de estudiantes), leer, actualizar y eliminar cualquier registro.
@@ -81,6 +87,7 @@ PostgreSQL
 ```
 
 ### Responsabilidades por capa
+
 - **Frontend (React):** vistas, componentes y estado de interfaz. Formularios, listados y navegación condicional por rol. No valida permisos de forma definitiva ni accede a Prisma.
 - **Routes:** definen los endpoints y conectan middlewares con controllers. Sin lógica de negocio ni consultas.
 - **Middlewares:** verifican sesión (`requireAuth`), aplican RBAC (`requireTeacher`), validan esquemas Zod y centralizan errores.
@@ -90,6 +97,7 @@ PostgreSQL
 - **Schemas:** esquemas Zod para `body`, `params` y `query`.
 
 ### Recorrido de una petición (ejemplo: estudiante crea práctica)
+
 1. React envía `POST /api/internships` con `credentials: 'include'` y el JSON del formulario.
 2. Middleware `requireAuth`: valida la cookie de sesión. Sin sesión → `401`.
 3. Middleware de validación: Zod valida el `body`. Inválido → `400`, sin tocar la BD.
@@ -102,41 +110,47 @@ PostgreSQL
 ## Endpoints (MVP)
 
 ### Auth (`/api/auth`)
-| Método | Ruta | Acceso | Función |
-|---|---|---|---|
-| POST | `/register` | Público | Crea cuenta rol `STUDENT` |
-| POST | `/login` | Público | Inicia sesión |
-| POST | `/logout` | Sesión | Cierra sesión |
-| GET | `/session` | Sesión | Devuelve usuario autenticado (para Dashboard) |
+
+| Método | Ruta        | Acceso  | Función                                       |
+| ------ | ----------- | ------- | --------------------------------------------- |
+| POST   | `/register` | Público | Crea cuenta rol `STUDENT`                     |
+| POST   | `/login`    | Público | Inicia sesión                                 |
+| POST   | `/logout`   | Sesión  | Cierra sesión                                 |
+| GET    | `/session`  | Sesión  | Devuelve usuario autenticado (para Dashboard) |
 
 ### Prácticas (`/api/internships`)
-| Método | Ruta | Acceso | Función |
-|---|---|---|---|
-| GET | `/` | Sesión | Listado paginado. Estudiante: solo sus prácticas. Profesor: todas, con filtros |
-| POST | `/` | Sesión | Estudiante: propia (estado `ACTIVA`). Profesor: en nombre de un estudiante. Ambos envían `teacherId` obligatorio (rol `TEACHER`) |
-| GET | `/:id` | Sesión | Estudiante: solo si es suya (ajena → `404`). Profesor: cualquiera |
-| PUT | `/:id` | Profesor | Actualiza cualquier registro (sin `studentId`; `teacherId` reasignable) |
-| DELETE | `/:id` | Profesor | Soft delete de cualquier registro |
+
+| Método | Ruta   | Acceso   | Función                                                                                                                          |
+| ------ | ------ | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/`    | Sesión   | Listado paginado. Estudiante: solo sus prácticas. Profesor: todas, con filtros                                                   |
+| POST   | `/`    | Sesión   | Estudiante: propia (estado `ACTIVA`). Profesor: en nombre de un estudiante. Ambos envían `teacherId` obligatorio (rol `TEACHER`) |
+| GET    | `/:id` | Sesión   | Estudiante: solo si es suya (ajena → `404`). Profesor: cualquiera                                                                |
+| PUT    | `/:id` | Profesor | Actualiza cualquier registro (sin `studentId`; `teacherId` reasignable)                                                          |
+| DELETE | `/:id` | Profesor | Soft delete de cualquier registro                                                                                                |
 
 **Listado (`GET /`) — query params validados con Zod:**
+
 - `page` (default `1`) y `pageSize` (default `10`, máximo `50`) para ambos roles.
 - `status` y `companyName` (coincidencia parcial, case-insensitive) para ambos roles.
 - `studentId` solo para `TEACHER`. Si un `STUDENT` lo envía → `400`.
 - Respuesta: `{ records: [...], total, page, pageSize }`. Los registros eliminados (soft delete) nunca aparecen.
 
 ### Estudiantes (`/api/students`)
-| Método | Ruta | Acceso | Función |
-|---|---|---|---|
-| GET | `/` | Profesor | Lista `id`, `name`, `email` de estudiantes (para el selector al crear) |
+
+| Método | Ruta | Acceso   | Función                                                                |
+| ------ | ---- | -------- | ---------------------------------------------------------------------- |
+| GET    | `/`  | Profesor | Lista `id`, `name`, `email` de estudiantes (para el selector al crear) |
 
 ### Profesores (`/api/teachers`)
-| Método | Ruta | Acceso | Función |
-|---|---|---|---|
-| GET | `/` | Sesión | Lista `id`, `name` de profesores (para que el estudiante elija supervisor al crear) |
+
+| Método | Ruta | Acceso | Función                                                                             |
+| ------ | ---- | ------ | ----------------------------------------------------------------------------------- |
+| GET    | `/`  | Sesión | Lista `id`, `name` de profesores (para que el estudiante elija supervisor al crear) |
 
 ## Datos mínimos
 
 ### User
+
 - `id`;
 - `name`;
 - `email` único;
@@ -146,6 +160,7 @@ PostgreSQL
 - `createdAt`, `updatedAt`.
 
 ### InternshipRecord (Práctica)
+
 - `id`;
 - `studentId` → relación con `User` rol `STUDENT` (inmutable tras la creación);
 - `teacherId` → relación con `User` rol `TEACHER`, profesor encargado de supervisar;
@@ -164,6 +179,7 @@ PostgreSQL
 El nombre y email del estudiante y del profesor supervisor se obtienen desde sus `User`; no se duplican en la práctica.
 
 ## Criterios de aceptación
+
 - [ ] Un visitante puede registrarse (rol estudiante), iniciar sesión y cerrar sesión.
 - [ ] Las rutas protegidas rechazan peticiones sin sesión con `401`.
 - [ ] Un estudiante autenticado puede crear un registro de práctica y consultar sus propias prácticas.
@@ -185,6 +201,7 @@ El nombre y email del estudiante y del profesor supervisor se obtienen desde sus
 - [ ] La interfaz funciona en móvil y escritorio, con acciones visibles según el rol.
 
 ## Fuera del MVP
+
 - Recuperación o cambio de contraseña y envío de emails.
 - Registro público de profesores o panel de administración de usuarios.
 - Reportes y estadísticas.
