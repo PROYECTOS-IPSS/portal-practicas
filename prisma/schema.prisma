@@ -1,7 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// Portal de Prácticas TP — esquema de base de datos (PostgreSQL)
+// Docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client"
@@ -10,4 +8,56 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+}
+
+enum InternshipStatus {
+  ACTIVA
+  FINALIZADA
+  EVALUADA
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  major        String?
+
+  studentRecords InternshipRecord[] @relation("StudentRecords")
+  teacherRecords InternshipRecord[] @relation("TeacherRecords")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InternshipRecord {
+  id      String @id @default(cuid())
+  student User   @relation("StudentRecords", fields: [studentId], references: [id])
+  teacher User   @relation("TeacherRecords", fields: [teacherId], references: [id])
+
+  studentId String
+  teacherId String
+
+  companyName    String
+  companyAddress String
+  companyPhone   String
+  bossName       String
+  bossContact    String
+  startDate      DateTime
+  endDate        DateTime
+  description    String
+  status         InternshipStatus @default(ACTIVA)
+  deletedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([teacherId])
 }

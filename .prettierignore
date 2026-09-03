@@ -1,0 +1,7 @@
+node_modules
+dist
+src/generated
+frontend
+prisma
+.env
+yarn.lock
