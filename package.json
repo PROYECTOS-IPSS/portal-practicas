@@ -1,0 +1,36 @@
+{
+  "name": "portal-practicas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Portal de Prácticas TP — backend Express + TypeScript + Prisma",
+  "repository": "https://github.com/PROYECTOS-IPSS/portal-practicas.git",
+  "author": "Ka0sss <enrique.gonzalez.soat@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/express-session": "^1.19.0",
+    "@types/node": "^26.4.1",
+    "eslint": "^10.9.1",
+    "prettier": "^3.9.6",
+    "prisma": "7.10.0",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}
