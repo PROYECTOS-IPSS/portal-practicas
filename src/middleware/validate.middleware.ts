@@ -19,7 +19,10 @@ export const validate =
       return;
     }
 
-    const target = req as unknown as Record<ValidationSource, unknown>;
-    target[source] = parsed.data;
+    // req.query/req.params son getters de solo lectura en Express 5:
+    // el resultado saneado queda en req.validated para el controller.
+    const target = req as unknown as { validated?: Record<string, unknown> };
+    const slot = (target.validated ??= {});
+    slot[source] = parsed.data;
     next();
   };
