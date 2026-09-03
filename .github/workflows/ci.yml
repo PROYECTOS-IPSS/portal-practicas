@@ -24,6 +24,10 @@ jobs:
       - name: Env mínimo para Prisma
         run: echo 'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ci?schema=public"' > .env
 
+      # src/generated/prisma está gitignored: hay que regenerar el client en CI.
+      - name: Generar Prisma Client
+        run: yarn prisma generate
+
       - name: Validar schema Prisma
         run: yarn prisma validate
 
