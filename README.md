@@ -13,7 +13,6 @@ supervisar, filtrar, editar, transicionar estados y dar de baja los registros.
 - **Reglas de negocio**: una sola práctica `ACTIVA` por estudiante, `studentId` inmutable, `teacherId` reasignable y validado contra rol, fechas coherentes (`endDate >= startDate`).
 - **Validación** de `body`, `params` y `query` con **Zod** antes de tocar la base de datos.
 - **Frontend** con sistema de diseño propio (ver `docs/design.md`), responsive y accesible.
-- **CI** (GitHub Actions): typecheck, lint, tests y build en cada PR; `main` protegida con checks obligatorios.
 
 ## Stack
 
@@ -65,7 +64,6 @@ frontend/src/            # React
 
 docs/                    # BRIEF.md (qué) · AGENTS.md (cómo) · design.md
 tests/                   # Vitest (backend)
-.github/workflows/ci.yml # CI
 ```
 
 ## Requisitos
@@ -181,16 +179,13 @@ solo profesor (soft delete). Listado con `page`, `pageSize`, `status`, `companyN
 
 **Personas** — `GET /api/teachers` (sesión) y `GET /api/students` (solo profesor).
 
-## Testing y CI
+## Testing
 
 ```bash
 yarn test        # 86 tests (Vitest)
 yarn typecheck   # TypeScript estricto
 yarn lint        # ESLint backend
 ```
-
-GitHub Actions corre backend (prisma validate, typecheck, ESLint, Vitest, build) y
-frontend (oxlint, build) en cada PR. `main` exige ambos checks verdes antes de fusionar.
 
 ## Notas de diseño
 
