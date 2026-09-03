@@ -11,5 +11,12 @@ export default tseslint.config(
     languageOptions: {
       globals: globals.node,
     },
+    rules: {
+      // Convención del repo: argumentos/valores no usados empiezan con _.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+      ],
+    },
   },
 );
