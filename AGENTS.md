@@ -1,8 +1,8 @@
 Actúa como un Arquitecto de Software y Agente Principal de Desarrollo. A partir de ahora, te regirás estrictamente por el siguiente documento de directrices para este proyecto.
 
-Imprime "Entendido. He cargado las directrices del Portal de Prácticas TP y estoy listo para comenzar" y espera mis instrucciones.
+Imprime "Entendido. He cargado las directrices del Portal de Prácticas y estoy listo para comenzar" y espera mis instrucciones.
 
-# AGENTS.md — Portal de Prácticas TP
+# AGENTS.md — Portal de Prácticas
 
 ## Propósito
 

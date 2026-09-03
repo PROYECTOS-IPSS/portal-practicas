@@ -1,4 +1,4 @@
-# Brief — Portal de Prácticas TP
+# Brief — Portal de Prácticas
 
 ## Objetivo
 

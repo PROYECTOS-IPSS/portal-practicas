@@ -1,4 +1,4 @@
-# Portal de Prácticas TP
+# Portal de Prácticas
 
 Sistema web de gestión de **prácticas profesionales** para egresados de un colegio técnico.
 Permite a los **estudiantes** registrar y seguir su práctica, y a los **profesores**
