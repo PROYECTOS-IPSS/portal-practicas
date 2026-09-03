@@ -3,6 +3,8 @@ import express from 'express';
 import session from 'express-session';
 import authRouter from './routes/auth.routes.js';
 import internshipRouter from './routes/internship.routes.js';
+import studentsRouter from './routes/students.routes.js';
+import teachersRouter from './routes/teachers.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 
 const sessionSecret = process.env['SESSION_SECRET'];
@@ -30,6 +32,8 @@ app.use(
 // API
 app.use('/api/auth', authRouter);
 app.use('/api/internships', internshipRouter);
+app.use('/api/teachers', teachersRouter);
+app.use('/api/students', studentsRouter);
 
 // Último middleware: convierte errores (HttpError y otros) en JSON.
 app.use(errorHandler);

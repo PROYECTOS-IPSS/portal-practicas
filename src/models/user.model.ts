@@ -39,4 +39,22 @@ export const userModel = {
   create(data: CreateUserData) {
     return prisma.user.create({ data, select: publicSelect });
   },
+
+  /** Lista de profesores (para que el estudiante elija supervisor). */
+  listTeachers() {
+    return prisma.user.findMany({
+      where: { role: 'TEACHER' },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    });
+  },
+
+  /** Lista de estudiantes (para el selector del profesor al crear). */
+  listStudents() {
+    return prisma.user.findMany({
+      where: { role: 'STUDENT' },
+      select: { id: true, name: true, email: true },
+      orderBy: { name: 'asc' },
+    });
+  },
 };
