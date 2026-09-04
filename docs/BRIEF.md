@@ -27,7 +27,7 @@ Inicia sesión y puede:
 - eliminar registros obsoletos o incorrectos;
 - transicionar el estado de las prácticas (`ACTIVA` → `FINALIZADA` → `EVALUADA`).
 
-Las cuentas de profesor se cargan mediante `prisma/seed.ts` (no existe registro público de profesores).
+Las cuentas de profesor se cargan mediante `prisma/seed.ts` (no existe registro público de profesores). El seed también precarga estudiantes y prácticas de demostración (ver anexo al final).
 
 ## Flujo de registro de práctica
 
@@ -209,3 +209,41 @@ El nombre y email del estudiante y del profesor supervisor se obtienen desde sus
 - Calendario visual o notificaciones.
 - API pública o aplicación móvil.
 - Restauración de registros eliminados (soft delete es irreversible en el MVP).
+
+## Anexo — Datos de ejemplo (seed)
+
+`yarn prisma db seed` carga los datos de demostración del sistema. Es idempotente:
+los usuarios se actualizan por `email` (sin pisar datos) y las prácticas demo solo
+se insertan si no existe una idéntica. Contraseñas de demostración: profesores
+`profesor123`, estudiantes `egresado123`.
+
+### Profesores
+
+| Nombre | Email |
+|---|---|
+| María González | `maria.gonzalez@colegio.cl` |
+| Carlos Pérez | `carlos.perez@colegio.cl` |
+| Lucía Fernández | `lucia.fernandez@colegio.cl` |
+
+### Estudiantes (de demostración)
+
+| Nombre | Email | Carrera |
+|---|---|---|
+| Joaquín Rojas | `joaquin.rojas@alumno.cl` | Telecomunicaciones |
+| Valentina Soto | `valentina.soto@alumno.cl` | Programación |
+| Benjamín Cifuentes | `benjamin.cifuentes@alumno.cl` | Redes y Seguridad |
+
+### Prácticas de demostración
+
+| Estudiante | Empresa | Estado | Periodo |
+|---|---|---|---|
+| Joaquín Rojas | Telecom Sur Ltda. | EVALUADA | 2025-03-03 → 2025-08-29 |
+| Joaquín Rojas | Fibra Andina SpA | ACTIVA | 2026-09-01 → 2027-02-28 |
+| Valentina Soto | Softlandia SPA | EVALUADA | 2025-01-06 → 2025-06-27 |
+| Valentina Soto | DataCore Chile | FINALIZADA | 2026-03-02 → 2026-08-28 |
+| Benjamín Cifuentes | NetSecure Consultores | EVALUADA | 2024-08-05 → 2024-12-20 |
+| Benjamín Cifuentes | RedLan Empresas | FINALIZADA | 2025-07-07 → 2025-12-19 |
+
+Los estados están mezclados a propósito (1 ACTIVA, 2 FINALIZADA, 3 EVALUADA) para
+ejercitar filtros, paginación y transiciones. Solo un estudiante (Joaquín) tiene
+práctica ACTIVA, respetando la exclusividad del sistema.

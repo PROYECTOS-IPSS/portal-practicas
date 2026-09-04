@@ -47,7 +47,7 @@ PostgreSQL
 prisma/
 ├── migrations/          # migraciones aplicadas
 ├── schema.prisma        # modelos User e InternshipRecord
-└── seed.ts              # profesores precargados
+└── seed.ts              # datos demo: profesores, estudiantes, prácticas
 
 src/                     # backend
 ├── app.ts · server.ts
@@ -114,13 +114,49 @@ yarn prisma migrate dev
 
 Aplica las migraciones de `prisma/migrations/`.
 
-### 5. Cargar profesores (seed)
+### 5. Cargar datos de demostración (seed)
 
 ```bash
 yarn prisma db seed
 ```
 
-Crea 3 cuentas de profesor (no existe registro público de TEACHER).
+Carga 3 profesores, 3 estudiantes de ejemplo y 6 prácticas demo con estados
+variados. Es idempotente: puedes re-ejecutarlo sin duplicar ni pisar datos.
+
+## Datos de ejemplo (seed)
+
+Contraseñas de demostración: profesores `profesor123` · estudiantes `egresado123`.
+
+### Profesores
+
+| Nombre | Email |
+|---|---|
+| María González | `maria.gonzalez@colegio.cl` |
+| Carlos Pérez | `carlos.perez@colegio.cl` |
+| Lucía Fernández | `lucia.fernandez@colegio.cl` |
+
+### Estudiantes (demostración)
+
+| Nombre | Email | Carrera |
+|---|---|---|
+| Joaquín Rojas | `joaquin.rojas@alumno.cl` | Telecomunicaciones |
+| Valentina Soto | `valentina.soto@alumno.cl` | Programación |
+| Benjamín Cifuentes | `benjamin.cifuentes@alumno.cl` | Redes y Seguridad |
+
+### Prácticas (demostración)
+
+| Estudiante | Empresa | Estado | Periodo |
+|---|---|---|---|
+| Joaquín Rojas | Telecom Sur Ltda. | EVALUADA | 2025-03-03 → 2025-08-29 |
+| Joaquín Rojas | Fibra Andina SpA | ACTIVA | 2026-09-01 → 2027-02-28 |
+| Valentina Soto | Softlandia SPA | EVALUADA | 2025-01-06 → 2025-06-27 |
+| Valentina Soto | DataCore Chile | FINALIZADA | 2026-03-02 → 2026-08-28 |
+| Benjamín Cifuentes | NetSecure Consultores | EVALUADA | 2024-08-05 → 2024-12-20 |
+| Benjamín Cifuentes | RedLan Empresas | FINALIZADA | 2025-07-07 → 2025-12-19 |
+
+> Los estados están mezclados (1 ACTIVA · 2 FINALIZADA · 3 EVALUADA) para ejercitar
+> filtros, paginación y transiciones. Los estudiantes también pueden crearse desde
+> la interfaz (registro público).
 
 ### 6. Ejecutar
 
@@ -137,16 +173,6 @@ cd frontend && yarn dev
 ```
 
 Abre **http://localhost:5173**.
-
-## Cuentas de ejemplo (seed)
-
-| Rol | Email | Contraseña |
-|---|---|---|
-| Profesor | `maria.gonzalez@colegio.cl` | `profesor123` |
-| Profesor | `carlos.perez@colegio.cl` | `profesor123` |
-| Profesor | `lucia.fernandez@colegio.cl` | `profesor123` |
-
-Los estudiantes se crean desde la interfaz (registro público).
 
 ## Scripts
 
