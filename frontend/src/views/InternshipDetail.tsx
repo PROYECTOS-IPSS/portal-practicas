@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { internshipsApi } from '../services/internships';
-import type { Internship, InternshipStatus } from '../services/types';
+import type { Internship } from '../services/types';
 import { Alert } from '../components/ui/Alert';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -10,11 +10,7 @@ import { FullPageSpinner } from '../components/ui/Spinner';
 import { StateRail } from '../components/ui/StateRail';
 import { StatusChip } from '../components/ui/StatusChip';
 import { formatDate } from '../lib/date';
-
-const NEXT_STATUS: Partial<Record<InternshipStatus, InternshipStatus>> = {
-  ACTIVA: 'FINALIZADA',
-  FINALIZADA: 'EVALUADA',
-};
+import { NEXT_STATUS } from '../lib/status';
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (

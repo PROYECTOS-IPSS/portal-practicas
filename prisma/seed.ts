@@ -7,8 +7,7 @@
 //   (mismo estudiante + empresa + fecha de inicio).
 import 'dotenv/config';
 import bcrypt from 'bcryptjs';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../src/generated/prisma/client.js';
+import { prisma } from '../src/config/prisma.js';
 import type { InternshipStatus } from '../src/generated/prisma/enums.js';
 
 // Contraseñas de demostración de las cuentas precargadas.
@@ -125,13 +124,6 @@ const internships: SeedInternship[] = [
 ];
 
 const toUtcDate = (isoDate: string): Date => new Date(`${isoDate}T00:00:00.000Z`);
-
-const connectionString = process.env['DATABASE_URL'];
-if (!connectionString) {
-  throw new Error('Falta DATABASE_URL en el entorno (.env)');
-}
-
-const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 
 async function main() {
   const teacherHash = await bcrypt.hash(TEACHER_PASSWORD, 10);

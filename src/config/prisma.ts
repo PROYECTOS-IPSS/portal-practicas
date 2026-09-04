@@ -9,6 +9,12 @@ if (!connectionString) {
 }
 
 // Prisma 7 requiere driver adapter; el pool se crea bajo demanda.
+// Timeouts explícitos: equivalen a los defaults de Prisma v6 (más robustos que
+// los de v7: connectionTimeout 0 e idle 10s).
 export const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString }),
+  adapter: new PrismaPg({
+    connectionString,
+    connectionTimeoutMillis: 5_000,
+    idleTimeoutMillis: 300_000,
+  }),
 });

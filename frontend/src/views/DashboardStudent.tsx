@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { internshipsApi } from '../services/internships';
 import type { Internship } from '../services/types';
 import { Alert } from '../components/ui/Alert';

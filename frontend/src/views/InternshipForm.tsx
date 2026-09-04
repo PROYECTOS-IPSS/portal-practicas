@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { internshipsApi } from '../services/internships';
 import { studentsApi, teachersApi } from '../services/people';
