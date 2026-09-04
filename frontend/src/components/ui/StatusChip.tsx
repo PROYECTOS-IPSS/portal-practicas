@@ -1,7 +1,7 @@
 import type { InternshipStatus } from '../../services/types';
 
 const STYLE: Record<InternshipStatus, string> = {
-  ACTIVA: 'bg-amber-soft text-amber-strong',
+  ACTIVA: 'bg-accent-soft text-accent-strong',
   FINALIZADA: 'bg-slate-soft text-slate-status',
   EVALUADA: 'bg-success-soft text-success',
 };

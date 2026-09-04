@@ -16,9 +16,9 @@
   --color-brand-strong: #0c5052;
   --color-brand-soft: #e2efef;
 
-  --color-amber: #e08a1e;
-  --color-amber-strong: #9a5a00;
-  --color-amber-soft: #fdf1e0;
+  --color-accent: #e15b4c;
+  --color-accent-strong: #b83c2e;
+  --color-accent-soft: #fceaea;
 
   --color-success: #2e7d4f;
   --color-success-soft: #e6f2ea;
@@ -101,12 +101,12 @@
   );
 }
 
-/* Cinta de señalización (ámbar → teal), usada como borde superior de marca. */
+/* Cinta de señalización (coral → teal), usada como borde superior de marca. */
 @utility signal-strip {
-  background: linear-gradient(90deg, var(--color-amber), var(--color-brand));
+  background: linear-gradient(90deg, var(--color-accent), var(--color-brand));
 }
 
 /* Luz de señal encendida (estado ACTIVA) sobre fondo ink. */
 @utility signal-glow {
-  box-shadow: 0 0 0 4px rgb(224 138 30 / 0.22), 0 0 18px rgb(224 138 30 / 0.45);
+  box-shadow: 0 0 0 4px rgb(225 91 76 / 0.22), 0 0 18px rgb(225 91 76 / 0.45);
 }
