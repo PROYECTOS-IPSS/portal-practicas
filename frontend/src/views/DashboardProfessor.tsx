@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { internshipsApi } from '../services/internships';
 import { studentsApi } from '../services/people';
 import type { Internship, InternshipList, InternshipStatus, Student } from '../services/types';
@@ -10,11 +10,7 @@ import { Field, Input, Select } from '../components/ui/Field';
 import { FullPageSpinner } from '../components/ui/Spinner';
 import { StatusChip } from '../components/ui/StatusChip';
 import { formatDate } from '../lib/date';
-
-const NEXT_STATUS: Partial<Record<InternshipStatus, InternshipStatus>> = {
-  ACTIVA: 'FINALIZADA',
-  FINALIZADA: 'EVALUADA',
-};
+import { NEXT_STATUS } from '../lib/status';
 
 const STATUS_OPTIONS: InternshipStatus[] = ['ACTIVA', 'FINALIZADA', 'EVALUADA'];
 
