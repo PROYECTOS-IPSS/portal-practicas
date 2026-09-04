@@ -25,11 +25,11 @@ export function BrandPanel({ eyebrow, code, titleA, mark, description, footer }:
 
       <div className="relative">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-white/60">{eyebrow}</p>
-        <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-amber">{code}</p>
+        <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">{code}</p>
         <h1 className="mt-8 font-display text-4xl font-semibold leading-[1.05] text-white xl:text-5xl">
           {titleA}
           <br />
-          <span className="mt-2 inline-block -rotate-1 rounded-sm bg-amber px-3 pb-1 font-display text-ink">
+          <span className="mt-2 inline-block -rotate-1 rounded-sm bg-accent px-3 pb-1 font-display text-white">
             {mark}
           </span>
         </h1>
@@ -47,7 +47,7 @@ export function BrandPanel({ eyebrow, code, titleA, mark, description, footer }:
               <Fragment key={step}>
                 {index > 0 ? (
                   <span
-                    className={`h-px w-8 ${index === 1 ? 'bg-amber/50' : 'bg-white/15'}`}
+                    className={`h-px w-8 ${index === 1 ? 'bg-accent/50' : 'bg-white/15'}`}
                     aria-hidden="true"
                   />
                 ) : null}
@@ -55,7 +55,7 @@ export function BrandPanel({ eyebrow, code, titleA, mark, description, footer }:
                   <span
                     className={
                       index === 0
-                        ? 'h-2 w-2 rounded-full bg-amber signal-glow'
+                        ? 'h-2 w-2 rounded-full bg-accent signal-glow'
                         : 'h-2 w-2 rounded-full border border-white/25'
                     }
                     aria-hidden="true"

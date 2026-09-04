@@ -24,15 +24,15 @@ supervisan. Lenguaje de "gestión", sin jerga de sistema.
 > en la UI ni en los textos visibles.
 
 **Paleta — decisión de identidad:** base *ink* (pizarra técnica, no azul corporativo) con
-un acento *ámbar* de señalización (la práctica en curso es una "luz ámbar") y un *teal*
+un acento *coral* de señalización (la práctica en curso es una "luz coral") y un *teal*
 institucional para las acciones primarias. El verde solo significa "EVALUADA/aprobada",
-el rojo solo "error". Evita el azul por defecto de los dashboards y el verde ácido genérico.
+el rojo puro solo "error". Evita el azul por defecto de los dashboards y el verde ácido genérico.
 
 **Firma visual (signature):** en autenticación, la **ficha de expediente**: panel ink con
-cuadrícula técnica, título display con la palabra clave en **sello ámbar** rotado
+cuadrícula técnica, título display con la palabra clave en **sello coral** rotado
 (ej. *Portal de [Prácticas]*), código `Exp. 0001/26` en mono y el **state rail** del
-producto con la luz ámbar de "ACTIVA" encendida (`signal-glow`). Dentro de la app, el
-**state rail** ámbar/teal/verde es la pieza central. Solo estos momentos llevan carácter;
+producto con la luz coral de "ACTIVA" encendida (`signal-glow`). Dentro de la app, el
+**state rail** coral/teal/verde es la pieza central. Solo estos momentos llevan carácter;
 el resto se mantiene disciplinado.
 
 **Tipografía:** *Space Grotesk* (display, técnica con carácter) para títulos y marca;
@@ -66,9 +66,9 @@ de la sección 3). Los valores hex son la fuente de verdad; no re-declararlos en
   --color-brand-strong: #0c5052; /* hover/activo */
   --color-brand-soft: #e2efef;   /* fondo suave de marca */
 
-  --color-amber: #e08a1e;        /* ACTIVA / señal de "en curso" */
-  --color-amber-strong: #9a5a00; /* texto ámbar accesible sobre claro */
-  --color-amber-soft: #fdf1e0;   /* fondo de chip ACTIVA */
+  --color-accent: #e15b4c;        /* ACTIVA / señal y sellos (coral) */
+  --color-accent-strong: #b83c2e; /* texto coral accesible sobre claro */
+  --color-accent-soft: #fceaea;   /* fondo de chip ACTIVA */
 
   --color-success: #2e7d4f;      /* EVALUADA / éxito */
   --color-success-soft: #e6f2ea;
@@ -106,14 +106,14 @@ de la sección 3). Los valores hex son la fuente de verdad; no re-declararlos en
   clip-path: polygon(0 0, calc(100% - 1.25rem) 0, 100% 1.25rem, 100% 100%, 0 100%);
 }
 
-/* Cinta de señalización (ámbar → teal), borde superior de marca. */
+/* Cinta de señalización (coral → teal), borde superior de marca. */
 @utility signal-strip {
-  background: linear-gradient(90deg, var(--color-amber), var(--color-brand));
+  background: linear-gradient(90deg, var(--color-accent), var(--color-brand));
 }
 
 /* Luz de señal encendida (estado ACTIVA) sobre fondo ink. */
 @utility signal-glow {
-  box-shadow: 0 0 0 4px rgb(224 138 30 / 0.22), 0 0 18px rgb(224 138 30 / 0.45);
+  box-shadow: 0 0 0 4px rgb(225 91 76 / 0.22), 0 0 18px rgb(225 91 76 / 0.45);
 }
 ```
 
@@ -206,7 +206,7 @@ de la sección 3). Los valores hex son la fuente de verdad; no re-declararlos en
 
 | Estado | Clases |
 |---|---|
-| ACTIVA | `inline-flex items-center gap-1.5 rounded-chip bg-amber-soft px-2.5 py-0.5 font-mono text-xs font-medium uppercase tracking-wide text-amber-strong` |
+| ACTIVA | `inline-flex items-center gap-1.5 rounded-chip bg-accent-soft px-2.5 py-0.5 font-mono text-xs font-medium uppercase tracking-wide text-accent-strong` |
 | FINALIZADA | `... bg-slate-soft ... text-slate-status` (mismo esqueleto) |
 | EVALUADA | `... bg-success-soft ... text-success` |
 
@@ -281,13 +281,13 @@ Estructura y clases:
 - Contenedor: `relative hidden overflow-hidden bg-ink lg:flex lg:flex-col lg:justify-between lg:p-10`
 - Fondo: `absolute inset-0 bg-blueprint`; cinta: `absolute inset-x-0 top-0 h-1 signal-strip`
 - Eyebrow: `font-mono text-xs uppercase tracking-[0.22em] text-white/60`
-- Código: `font-mono text-[11px] uppercase tracking-[0.18em] text-amber` ("Exp. 0001/26")
+- Código: `font-mono text-[11px] uppercase tracking-[0.18em] text-accent` ("Exp. 0001/26")
 - Título: `font-display text-4xl font-semibold leading-[1.05] text-white xl:text-5xl`
-- Sello (palabra clave): `mt-2 inline-block -rotate-1 rounded-sm bg-amber px-3 pb-1 text-ink`
+- Sello (palabra clave): `mt-2 inline-block -rotate-1 rounded-sm bg-accent px-3 pb-1 text-white`
 - Descripción: `max-w-md text-white/70`
 - Rail onDark: etiquetas `font-mono text-[10px] uppercase tracking-[0.14em] text-white/60`;
-  punto ACTIVA `h-2 w-2 rounded-full bg-amber signal-glow`, pendientes
-  `h-2 w-2 rounded-full border border-white/25`; segmentos `h-px w-8 bg-amber/50` (completado)
+  punto ACTIVA `h-2 w-2 rounded-full bg-accent signal-glow`, pendientes
+  `h-2 w-2 rounded-full border border-white/25`; segmentos `h-px w-8 bg-accent/50` (completado)
   o `bg-white/15` (pendiente)
 - Footer: `font-mono text-xs uppercase tracking-wide text-white/50`
 
@@ -306,11 +306,10 @@ text-faint` con trazo `+`, posiciones `-left-2 -top-2`, `-right-2 -top-2`,
 ## 6. Pantallas
 
 ### 6.1 Autenticación (Login / Registro) — ficha de expediente
-
 - **Contenedor**: `grid min-h-screen lg:grid-cols-2`
 - **Panel de marca** (izq., solo ≥1024px): componente `BrandPanel` (5.12). Fondo ink +
   cuadrícula (`bg-blueprint`), cinta `signal-strip` en el borde superior, título
-  "Portal de **[Prácticas]**" con sello ámbar, `Exp. 0001/26` y rail de estados onDark
+  "Portal de **[Prácticas]**" con sello coral, `Exp. 0001/26` y rail de estados onDark
   con luz ACTIVA. Copy: eyebrow "Alumnos egresados"; login footer "Práctica profesional";
   registro footer "Registro de egresado".
 - **Panel de formulario** (der.): `flex items-center justify-center bg-paper p-6 lg:p-12`
