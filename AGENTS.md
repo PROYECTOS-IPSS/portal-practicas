@@ -98,6 +98,14 @@ frontend/src/
 
 Crear archivos solo cuando una funcionalidad los necesite. Reutilizar patrones existentes.
 
+### Seed de demostración
+
+`prisma/seed.ts` precarga datos de ejemplo para desarrollo: 3 profesores
+(contraseña `profesor123`), 3 estudiantes (`egresado123`) y 6 prácticas demo en
+estados variados. Reglas: idempotente (usuarios por `upsert` de email; prácticas
+demo solo si no existe una idéntica) y nunca borra ni pisa datos creados por la
+app. La lista completa de datos vive en `README.md` y `docs/BRIEF.md`.
+
 ## Reglas técnicas del MVP implementado
 
 - Todo el sistema requiere autenticación. No hay rutas públicas a excepción del Login/Registro.
