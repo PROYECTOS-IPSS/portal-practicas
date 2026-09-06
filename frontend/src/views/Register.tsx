@@ -7,6 +7,7 @@ import { BrandMarks } from '../components/ui/BrandMarks';
 import { BrandPanel } from '../components/ui/BrandPanel';
 import { Button } from '../components/ui/Button';
 import { Field, Input } from '../components/ui/Field';
+import { errorInfo } from '../services/api';
 
 export function Register() {
   const { register } = useAuth();
@@ -16,17 +17,21 @@ export function Register() {
   const [password, setPassword] = useState('');
   const [major, setMajor] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setError(null);
+    setFieldErrors({});
     setLoading(true);
     try {
       await register({ name, email, password, major: major || undefined });
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No pudimos crear tu cuenta.');
+      const { general, fields } = errorInfo(err);
+      setError(general);
+      setFieldErrors(fields);
     } finally {
       setLoading(false);
     }
@@ -54,43 +59,53 @@ export function Register() {
               <p className="mt-1 text-sm text-muted">Regístrate como estudiante para comenzar.</p>
             </div>
             {error ? <Alert variant="error">{error}</Alert> : null}
-            <form onSubmit={onSubmit} className="space-y-4">
-              <Field label="Nombre completo" htmlFor="name">
+            <form onSubmit={onSubmit} className="space-y-4" noValidate>
+              <Field label="Nombre completo" htmlFor="name" error={fieldErrors.name}>
                 <Input
                   id="name"
                   autoComplete="name"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  required
+                  invalid={Boolean(fieldErrors.name)}
                 />
               </Field>
-              <Field label="Email" htmlFor="email">
+              <Field label="Email" htmlFor="email" error={fieldErrors.email}>
                 <Input
                   id="email"
                   type="email"
                   autoComplete="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  required
+                  invalid={Boolean(fieldErrors.email)}
                 />
               </Field>
-              <Field label="Contraseña" htmlFor="password" hint="Mínimo 8 caracteres.">
+              <Field
+                label="Contraseña"
+                htmlFor="password"
+                hint="Mínimo 8 caracteres."
+                error={fieldErrors.password}
+              >
                 <Input
                   id="password"
                   type="password"
                   autoComplete="new-password"
-                  minLength={8}
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  required
+                  invalid={Boolean(fieldErrors.password)}
                 />
               </Field>
               <Field
                 label="Carrera / especialidad"
                 htmlFor="major"
                 hint="Opcional. Ej.: Telecomunicaciones."
+                error={fieldErrors.major}
               >
-                <Input id="major" value={major} onChange={(event) => setMajor(event.target.value)} />
+                <Input
+                  id="major"
+                  value={major}
+                  onChange={(event) => setMajor(event.target.value)}
+                  invalid={Boolean(fieldErrors.major)}
+                />
               </Field>
               <Button type="submit" loading={loading} className="w-full">
                 Crear cuenta

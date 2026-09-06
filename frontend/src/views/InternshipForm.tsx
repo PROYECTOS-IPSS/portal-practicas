@@ -5,6 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 import { internshipsApi } from '../services/internships';
 import { studentsApi, teachersApi } from '../services/people';
 import type { Student, Teacher } from '../services/types';
+import { errorInfo } from '../services/api';
 import { Alert } from '../components/ui/Alert';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -48,6 +49,7 @@ export function InternshipForm() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(!isEdit);
 
@@ -93,6 +95,7 @@ export function InternshipForm() {
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setError(null);
+    setFieldErrors({});
     setLoading(true);
     try {
       if (isEdit) {
@@ -124,7 +127,9 @@ export function InternshipForm() {
         navigate(`/internships/${created.id}`);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No pudimos guardar la práctica.');
+      const { general, fields } = errorInfo(err);
+      setError(general);
+      setFieldErrors(fields);
     } finally {
       setLoading(false);
     }
@@ -147,46 +152,97 @@ export function InternshipForm() {
 
       {error ? <Alert variant="error">{error}</Alert> : null}
 
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-6" noValidate>
         <Card className="space-y-4">
           <h2 className="font-display text-lg font-semibold">Datos de la empresa</h2>
-          <Field label="Nombre de la empresa" htmlFor="companyName">
-            <Input id="companyName" value={form.companyName} onChange={(event) => updateField('companyName', event.target.value)} required />
+          <Field label="Nombre de la empresa" htmlFor="companyName" error={fieldErrors.companyName}>
+            <Input
+              id="companyName"
+              value={form.companyName}
+              onChange={(event) => updateField('companyName', event.target.value)}
+              invalid={Boolean(fieldErrors.companyName)}
+            />
           </Field>
-          <Field label="Dirección" htmlFor="companyAddress">
-            <Input id="companyAddress" value={form.companyAddress} onChange={(event) => updateField('companyAddress', event.target.value)} required />
+          <Field label="Dirección" htmlFor="companyAddress" error={fieldErrors.companyAddress}>
+            <Input
+              id="companyAddress"
+              value={form.companyAddress}
+              onChange={(event) => updateField('companyAddress', event.target.value)}
+              invalid={Boolean(fieldErrors.companyAddress)}
+            />
           </Field>
-          <Field label="Teléfono" htmlFor="companyPhone">
-            <Input id="companyPhone" value={form.companyPhone} onChange={(event) => updateField('companyPhone', event.target.value)} required />
+          <Field label="Teléfono" htmlFor="companyPhone" error={fieldErrors.companyPhone}>
+            <Input
+              id="companyPhone"
+              value={form.companyPhone}
+              onChange={(event) => updateField('companyPhone', event.target.value)}
+              invalid={Boolean(fieldErrors.companyPhone)}
+            />
           </Field>
         </Card>
 
         <Card className="space-y-4">
           <h2 className="font-display text-lg font-semibold">Jefe directo</h2>
-          <Field label="Nombre del jefe" htmlFor="bossName">
-            <Input id="bossName" value={form.bossName} onChange={(event) => updateField('bossName', event.target.value)} required />
+          <Field label="Nombre del jefe" htmlFor="bossName" error={fieldErrors.bossName}>
+            <Input
+              id="bossName"
+              value={form.bossName}
+              onChange={(event) => updateField('bossName', event.target.value)}
+              invalid={Boolean(fieldErrors.bossName)}
+            />
           </Field>
-          <Field label="Contacto (email o teléfono)" htmlFor="bossContact">
-            <Input id="bossContact" value={form.bossContact} onChange={(event) => updateField('bossContact', event.target.value)} required />
+          <Field
+            label="Contacto (email o teléfono)"
+            htmlFor="bossContact"
+            error={fieldErrors.bossContact}
+          >
+            <Input
+              id="bossContact"
+              value={form.bossContact}
+              onChange={(event) => updateField('bossContact', event.target.value)}
+              invalid={Boolean(fieldErrors.bossContact)}
+            />
           </Field>
         </Card>
 
         <Card className="space-y-4">
           <h2 className="font-display text-lg font-semibold">Práctica</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Fecha de inicio" htmlFor="startDate">
-              <Input id="startDate" type="date" value={form.startDate} onChange={(event) => updateField('startDate', event.target.value)} required />
+            <Field label="Fecha de inicio" htmlFor="startDate" error={fieldErrors.startDate}>
+              <Input
+                id="startDate"
+                type="date"
+                value={form.startDate}
+                onChange={(event) => updateField('startDate', event.target.value)}
+                invalid={Boolean(fieldErrors.startDate)}
+              />
             </Field>
-            <Field label="Fecha de término" htmlFor="endDate">
-              <Input id="endDate" type="date" value={form.endDate} onChange={(event) => updateField('endDate', event.target.value)} required />
+            <Field label="Fecha de término" htmlFor="endDate" error={fieldErrors.endDate}>
+              <Input
+                id="endDate"
+                type="date"
+                value={form.endDate}
+                onChange={(event) => updateField('endDate', event.target.value)}
+                invalid={Boolean(fieldErrors.endDate)}
+              />
             </Field>
           </div>
-          <Field label="Actividades a realizar" htmlFor="description">
-            <Textarea id="description" value={form.description} onChange={(event) => updateField('description', event.target.value)} required />
+          <Field label="Actividades a realizar" htmlFor="description" error={fieldErrors.description}>
+            <Textarea
+              id="description"
+              value={form.description}
+              onChange={(event) => updateField('description', event.target.value)}
+              invalid={Boolean(fieldErrors.description)}
+            />
           </Field>
           {isTeacher && !isEdit ? (
-            <Field label="Estudiante" htmlFor="studentId">
-              <Select id="studentId" value={form.studentId} onChange={(event) => updateField('studentId', event.target.value)} required>
+            <Field label="Estudiante" htmlFor="studentId" error={fieldErrors.studentId}>
+              <Select
+                id="studentId"
+                value={form.studentId}
+                onChange={(event) => updateField('studentId', event.target.value)}
+                invalid={Boolean(fieldErrors.studentId)}
+              >
                 <option value="">Selecciona un estudiante</option>
                 {students.map((student) => (
                   <option key={student.id} value={student.id}>
@@ -196,8 +252,13 @@ export function InternshipForm() {
               </Select>
             </Field>
           ) : null}
-          <Field label="Profesor supervisor" htmlFor="teacherId">
-            <Select id="teacherId" value={form.teacherId} onChange={(event) => updateField('teacherId', event.target.value)} required>
+          <Field label="Profesor supervisor" htmlFor="teacherId" error={fieldErrors.teacherId}>
+            <Select
+              id="teacherId"
+              value={form.teacherId}
+              onChange={(event) => updateField('teacherId', event.target.value)}
+              invalid={Boolean(fieldErrors.teacherId)}
+            >
               <option value="">Selecciona un profesor</option>
               {teachers.map((teacher) => (
                 <option key={teacher.id} value={teacher.id}>

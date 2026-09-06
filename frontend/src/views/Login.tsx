@@ -7,6 +7,7 @@ import { BrandMarks } from '../components/ui/BrandMarks';
 import { BrandPanel } from '../components/ui/BrandPanel';
 import { Button } from '../components/ui/Button';
 import { Field, Input } from '../components/ui/Field';
+import { errorInfo } from '../services/api';
 
 export function Login() {
   const { login } = useAuth();
@@ -14,17 +15,21 @@ export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setError(null);
+    setFieldErrors({});
     setLoading(true);
     try {
       await login({ email, password });
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No pudimos iniciar sesión.');
+      const { general, fields } = errorInfo(err);
+      setError(general);
+      setFieldErrors(fields);
     } finally {
       setLoading(false);
     }
@@ -54,25 +59,25 @@ export function Login() {
               <p className="mt-1 text-sm text-muted">Accede con tu cuenta para ver tus prácticas.</p>
             </div>
             {error ? <Alert variant="error">{error}</Alert> : null}
-            <form onSubmit={onSubmit} className="space-y-4">
-              <Field label="Email" htmlFor="email">
+            <form onSubmit={onSubmit} className="space-y-4" noValidate>
+              <Field label="Email" htmlFor="email" error={fieldErrors.email}>
                 <Input
                   id="email"
                   type="email"
                   autoComplete="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  required
+                  invalid={Boolean(fieldErrors.email)}
                 />
               </Field>
-              <Field label="Contraseña" htmlFor="password">
+              <Field label="Contraseña" htmlFor="password" error={fieldErrors.password}>
                 <Input
                   id="password"
                   type="password"
                   autoComplete="current-password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  required
+                  invalid={Boolean(fieldErrors.password)}
                 />
               </Field>
               <Button type="submit" loading={loading} className="w-full">

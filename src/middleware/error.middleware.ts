@@ -5,7 +5,9 @@ import { HttpError } from '../errors.js';
 // HttpError lleva su status; el resto es 500 genérico (sin filtrar detalles internos).
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof HttpError) {
-    res.status(err.status).json({ error: err.message });
+    const body: { error: string; fieldErrors?: Record<string, string> } = { error: err.message };
+    if (err.fieldErrors) body.fieldErrors = err.fieldErrors;
+    res.status(err.status).json(body);
     return;
   }
 

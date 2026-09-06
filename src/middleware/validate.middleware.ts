@@ -14,8 +14,13 @@ export const validate =
   (req, _res, next) => {
     const parsed = schema.safeParse(req[source]);
     if (!parsed.success) {
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path.join('.');
+        if (key && !(key in fieldErrors)) fieldErrors[key] = issue.message;
+      }
       const message = parsed.error.issues.map((issue) => issue.message).join('; ');
-      next(new HttpError(400, message || 'Datos inválidos'));
+      next(new HttpError(400, message || 'Datos inválidos', fieldErrors));
       return;
     }
 
