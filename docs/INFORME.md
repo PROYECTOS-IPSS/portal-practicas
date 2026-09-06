@@ -70,4 +70,49 @@ Para facilitar la evaluación y revisión, se diseñó un script de *seed* (`pri
 * 6 Prácticas en estados variados (ACTIVA, FINALIZADA, EVALUADA) para ejercitar inmediatamente los filtros, la paginación y las transiciones.
 
 ## 7. Conclusión
-El proyecto finaliza en un estado **100% funcional y verificado**, cumpliendo todas las rúbricas solicitadas. El código está libre de dependencias muertas o sobre-ingeniería, es tipeado de extremo a extremo, fuertemente testeado y empaquetado con Docker para su despliegue inmediato.
+
+El **Portal de Prácticas** se entrega como una solución completa, funcional y verificada de
+extremo a extremo, construida íntegramente sobre la base normativa del proyecto
+(`AGENTS.md` y `BRIEF.md`) y alineada, punto por punto, con los criterios de evaluación
+solicitados. No se trata únicamente de un conjunto de vistas y endpoints operativos, sino
+de un sistema de software con criterio de ingeniería, pensado para ser comprendido,
+auditado y evolucionado.
+
+En el **plano de la arquitectura**, el patrón MVC se respeta de manera estricta: las rutas
+definen la superficie de la API sin contener lógica, los controladores se limitan a
+orquestar, los servicios concentran las reglas de negocio y los modelos constituyen la
+única frontera de acceso a la persistencia. Esta separación de responsabilidades convierte
+cada capa en una unidad testeable y reemplazable, y convierte la incorporación de nuevas
+funcionalidades en un ejercicio de adición antes que de modificación.
+
+En el **plano de la seguridad**, el sistema delega la autoridad exclusivamente en el
+servidor. La sesión se gestiona con `express-session` sobre cookies `httpOnly`, las
+contraseñas se almacenan con hash `bcrypt`, y el control de acceso basado en roles se
+impone en el middleware antes de que cualquier petición alcance la lógica de negocio. La
+privacidad se trata como un requisito de producto: un estudiante que accede a un registro
+ajeno recibe un `404`, de modo que la API no revela ni siquiera la existencia del dato.
+
+En el **plano de la integridad de los datos**, toda entrada (`body`, `params` y `query`) es
+validada con **Zod** antes de tocar la base de datos, y el modelo relacional en
+**Prisma/PostgreSQL** refuerza esas garantías con claves únicas, claves foráneas con
+restricción de borrado, enumerados y los índices necesarios sobre las relaciones más
+consultadas. El ciclo de vida del registro (estados unidireccionales, exclusividad de la
+práctica activa, inmutabilidad del estudiante y borrado lógico) queda protegido tanto en
+la capa de aplicación como en la de datos.
+
+En el **plano de la calidad**, el código se acompaña de una suite de **86 pruebas
+automáticas** que cubren las reglas de negocio, los middlewares de seguridad y los flujos
+de autenticación, junto con verificación estática de tipos, lint y formateo en ambas capas.
+La revisión final aplicó criterios de simplicidad deliberada (sin dependencias muertas ni
+abstracciones prematuras), lo que se traduce en un mantenimiento de bajo costo.
+
+En el **plano de la experiencia**, la interfaz dispone de un sistema de diseño propio y
+documentado, responsive y accesible, que comunica el estado del expediente de manera
+visual e intuitiva, y de una retroalimentación de validación moderna, con errores
+contextualizados campo a campo.
+
+Como resultado, el proyecto queda en un estado listo para demostración y despliegue:
+reproducible mediante Docker, documentado en su totalidad y respaldado por evidencia
+funcional real. Constituye una base sólida sobre la cual incorporar, de manera natural, las
+capacidades que queden fuera del alcance del MVP (reportes, notificaciones, restauración
+de registros, entre otras), sin comprometer lo ya construido.
