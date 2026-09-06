@@ -3,6 +3,9 @@
 ## 1. Resumen Ejecutivo
 El **Portal de Prácticas** es una plataforma web full-stack diseñada para la gestión, seguimiento y evaluación de las prácticas profesionales de los alumnos egresados. El sistema provee un entorno seguro basado en roles (`STUDENT` y `TEACHER`), garantizando que la lógica de negocio y la privacidad de los datos se apliquen estrictamente en el backend, cumpliendo a cabalidad con las directrices de los documentos base (`BRIEF.md` y `AGENTS.md`).
 
+> **📸 IMAGEN SUGERIDA AQUÍ:** Captura de pantalla del Dashboard del Profesor, donde se vea la tabla poblada con múltiples registros. Esto muestra la plataforma en pleno funcionamiento desde el primer momento.
+> `![Vista general del Portal de Prácticas](ruta/a/tu/imagen-dashboard.png)`
+
 ## 2. Arquitectura del Sistema
 El proyecto se ha construido siguiendo el patrón **MVC (Modelo-Vista-Controlador)** en capas, con una separación estricta de responsabilidades:
 
@@ -34,11 +37,20 @@ El sistema implementa al pie de la letra las directrices de negocio:
 * **Flujo de Estados**: Las transiciones son unidireccionales (`ACTIVA → FINALIZADA → EVALUADA`). El sistema prohíbe proactivamente saltos o retrocesos.
 * **Inmutabilidad**: El `studentId` no se puede alterar tras la creación; intentar enviarlo en un `PUT` es rechazado por el esquema Zod (`.strict()`).
 
+> **📸 IMAGEN SUGERIDA AQUÍ:** Captura de pantalla del formulario de creación mostrando errores de validación de Zod en color rojo (ej: fechas mal ingresadas o campos vacíos). Esto demuestra que las reglas estrictas están funcionando.
+> `![Validaciones estrictas de negocio](ruta/a/tu/imagen-validaciones.png)`
+
 ## 5. Diseño e Interfaz (UI/UX)
 Se desarrolló un Sistema de Diseño propio documentado como fuente de verdad (`docs/design.md`), inspirado en el concepto de una **"ficha de expediente vivo"**.
 * **Identidad Visual**: Paleta basada en *ink* (pizarra técnica), acentos *ámbar* (señalización) y *teal* institucional. La marca fue unificada bajo el nombre **Portal de Prácticas**, eliminando terminología institucional interna ("colegio técnico") de las vistas públicas.
 * **Firma Visual**: Las pantallas de autenticación presentan una cuadrícula técnica y un *State Rail* (línea de estado) decorativo. En el dashboard, este *State Rail* permite al profesor avanzar visualmente las fases de la práctica.
 * **Accesibilidad**: Componentes semánticos, contraste verificado AA, manejo de foco visible (`:focus-visible`) y respeto por `prefers-reduced-motion`.
+
+> **📸 IMAGEN SUGERIDA AQUÍ:** Captura de pantalla de la vista de **Login**, destacando el panel izquierdo oscuro con la cuadrícula técnica, el sello coral rotado y la línea de estado decorativa.
+> `![Firma visual en el Login](ruta/a/tu/imagen-login.png)`
+
+> **📸 IMAGEN SUGERIDA AQUÍ:** Captura de pantalla de la vista de **Detalle de Práctica** (vista profesor), mostrando el *State Rail* interactivo (los botones de "Avanzar a...") y los chips de estado.
+> `![Línea de estado y controles de expediente](ruta/a/tu/imagen-detalle-rail.png)`
 
 ## 6. Datos de Demostración (Seed)
 Para facilitar la evaluación y revisión, se diseñó un script de *seed* (`prisma/seed.ts`) **idempotente** que puebla la base de datos de manera segura con:
