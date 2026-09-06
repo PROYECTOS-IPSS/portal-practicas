@@ -20,10 +20,19 @@ El proyecto se ha construido siguiendo el patrón **MVC (Modelo-Vista-Controlado
 5. **Servicios (Services)**: Corazón del sistema. Concentran toda la **lógica de negocio** (verificación de exclusividad, transiciones de estado, validación de pertenencia).
 6. **Modelos (Models)**: Única capa con acceso a la base de datos a través de **Prisma ORM**. Abstraen las consultas y devuelven datos tipados.
 
+> **📸 CÓDIGO SUGERIDO AQUÍ (ARQUITECTURA Y RBAC):** Captura del archivo `src/middleware/rbac.middleware.ts` mostrando la función `requireRole`. Esto demuestra el uso de Middlewares para la capa de seguridad.
+> `![Código del Middleware RBAC](ruta/a/tu/codigo-rbac.png)`
+
+> **📸 CÓDIGO SUGERIDO AQUÍ (LÓGICA DE NEGOCIO):** Captura del archivo `src/services/internship.service.ts` mostrando el método `create` o `update`. Esto demuestra cómo los servicios aíslan la lógica y manejan las reglas de pertenencia.
+> `![Código del Servicio de Prácticas](ruta/a/tu/codigo-servicio.png)`
+
 ## 3. Stack Tecnológico y Decisiones
 * **Backend**: Node.js, Express 5, TypeScript (~6.0, para máxima compatibilidad del tooling).
 * **Seguridad**: Se descartó JWT en favor de `express-session` con cookies `httpOnly`, `sameSite: 'lax'` y `secure` condicional. Las contraseñas se protegen con `bcryptjs` (10 rondas).
 * **Persistencia**: PostgreSQL con **Prisma ORM 7** (utilizando el driver adapter `@prisma/adapter-pg` y un pool de conexiones optimizado con timeouts explícitos).
+
+> **📸 CÓDIGO SUGERIDO AQUÍ (OPTIMIZACIÓN DE BD):** Captura del archivo `src/config/prisma.ts` donde se ve la configuración del `PrismaPg` y los `connectionTimeoutMillis`/`idleTimeoutMillis`. Esto demuestra la optimización de conexiones exigida en la rúbrica.
+> `![Optimización del Pool de Prisma](ruta/a/tu/codigo-pool-prisma.png)`
 * **Frontend**: React 19, Vite, React Router 7.
 * **Estilos**: Tailwind CSS v4, utilizando directivas CSS-first (`@theme`, `@utility`).
 * **Calidad de Código**: TypeScript estricto, ESLint (backend), oxlint (frontend), Prettier, y una suite de **86 tests automáticos de integración y unidad** con Vitest.
@@ -39,6 +48,8 @@ El sistema implementa al pie de la letra las directrices de negocio:
 
 > **📸 IMAGEN SUGERIDA AQUÍ:** Captura de pantalla del formulario de creación mostrando errores de validación de Zod en color rojo (ej: fechas mal ingresadas o campos vacíos). Esto demuestra que las reglas estrictas están funcionando.
 > `![Validaciones estrictas de negocio](ruta/a/tu/imagen-validaciones.png)`
+> **📸 CÓDIGO SUGERIDO AQUÍ (VALIDACIÓN E INTEGRIDAD):** Captura del archivo `src/schemas/internship.schema.ts` mostrando el uso de `.refine` para que `endDate >= startDate` y el `.strict()`, o bien el archivo `src/middleware/validate.middleware.ts`. Esto demuestra validación avanzada de datos.
+> `![Código de Validación Zod](ruta/a/tu/codigo-zod.png)`
 
 ## 5. Diseño e Interfaz (UI/UX)
 Se desarrolló un Sistema de Diseño propio documentado como fuente de verdad (`docs/design.md`), inspirado en el concepto de una **"ficha de expediente vivo"**.
